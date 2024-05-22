@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 
 const server = http.createServer((request, response) => {
     try {
-        const { url } = request;
+        const { url, method } = request;
     
-        if (url == "/html"){
+        if (method == "GET" && url == "/html"){
             response.writeHead(200, { 'Content-Type': 'text/html'});
             response.write(`
                 <!DOCTYPE html>
@@ -20,7 +20,7 @@ const server = http.createServer((request, response) => {
             `);
             response.end();
     
-        } else if (url == "/json"){
+        } else if (method == "GET" && url == "/json"){
             response.writeHead(200, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify(
                 {
@@ -47,17 +47,17 @@ const server = http.createServer((request, response) => {
             ));
             response.end();
     
-        } else if (url == "/uuid"){
+        } else if (method == "GET" && url == "/uuid"){
             response.writeHead(200, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({ uuid: uuidv4() }));
             response.end();
-        } else if (url.startsWith('/status/')){
+        } else if (method == "GET" && url.startsWith('/status/')){
             const statusCode = parseInt(url.split('/')[2]);
             if(statusCode){
                 response.writeHead(statusCode);
                 response.end();
             }
-        } else if ( url.startsWith("/delay/")){
+        } else if (method == "GET" && url.startsWith("/delay/")){
             const delaySeconds = parseInt(url.split("/")[2]);
             setTimeout(() => {
                 response.writeHead(200);
